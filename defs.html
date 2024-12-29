@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="ar">
+<head>
+    <meta charset="UTF-8">
+    <title>مراجعة مفردات الكيمياء</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@100;200;300;400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        :root {
+            --bg-primary: #1a1b1e;
+            --bg-secondary: #2c2e33;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --accent-color: #3b82f6;
+            --accent-hover: #2563eb;
+            --border-color: #374151;
+            --success-color: #22c55e;
+            --error-color: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'IBM Plex Sans Arabic', system-ui, -apple-system, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 2rem;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .header:hover {
+            transform: translateY(-5px);
+        }
+
+        .header h1 {
+            font-weight: 700;
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, var(--accent-color), #60a5fa);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .header .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin: 1.5rem 0;
+        }
+
+        .nav-btn {
+            padding: 0.75rem 1.5rem;
+            background-color: var(--bg-secondary);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background-color: var(--accent-color);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.active {
+            background-color: var(--accent-color);
+        }
+
+        .stats {
+            display: flex;
+            justify-content: center;
+            gap: 2rem;
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+        }
+
+        .progress-container {
+            background-color: var(--bg-secondary);
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            transition: transform 0.3s ease;
+        }
+
+        .progress-container:hover {
+            transform: scale(1.02);
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background-color: var(--bg-primary);
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent-color);
+            transition: width 0.5s ease;
+        }
+
+        .quiz-container {
+            background-color: var(--bg-secondary);
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease;
+        }
+
+        .quiz-container:hover {
+            transform: translateY(-5px);
+        }
+
+        .definition-box {
+            padding: 1.5rem;
+            background-color: var(--bg-primary);
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .definition-box:hover {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.1);
+        }
+
+        .definition-text {
+            font-size: 1.2rem;
+            font-weight: 500;
+            margin-bottom: 1.5rem;
+            line-height: 1.6;
+        }
+
+        .lesson-info {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-top: 0.5rem;
+        }
+
+        .question-number {
+            color: var(--accent-color);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            font-size: 1.1rem;
+        }
+
+        .answer-input {
+            width: 100%;
+            padding: 1rem;
+            background-color: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .answer-input:focus {
+            outline: none;
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            background-color: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            width: 100%;
+            margin-top: 1rem;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.2);
+        }
+
+        .btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .review-container {
+            display: none;
+            padding: 2rem;
+            background-color: var(--bg-secondary);
+            border-radius: 12px;
+        }
+
+        .review-item {
+            padding: 1rem;
+            margin-bottom: 1rem;
+            background-color: var(--bg-primary);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .review-item:hover {
+            transform: translateX(-5px);
+            border-color: var(--accent-color);
+        }
+
+        .feedback-message {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .feedback-message.correct {
+            background-color: rgba(34, 197, 94, 0.1);
+            color: var(--success-color);
+            border: 1px solid var(--success-color);
+        }
+
+        .feedback-message.incorrect {
+            background-color: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+            border: 1px solid var(--error-color);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header animate__animated animate__fadeIn">
+            <h1>مراجعة مفردات الكيمياء</h1>
+            <div class="subtitle">صنع بحب من قبل قياصرة الفلاح</div>
+            <div class="nav-buttons">
+                <button class="nav-btn active" onclick="showQuiz()">اختبار</button>
+                <button class="nav-btn" onclick="showReview()">مراجعة</button>
+            </div>
+            <div class="stats">
+                <div>السؤال: <span id="question-count">0/8</span></div>
+            </div>
+        </header>
+
+        <div class="progress-container animate__animated animate__fadeIn">
+            <div class="progress-bar">
+                <div class="progress-fill" id="progress"></div>
+            </div>
+        </div>
+
+        <div id="quiz-container" class="quiz-container animate__animated animate__fadeIn">
+            <div id="quiz-content">
+                <!-- سيتم ملؤه بواسطة JavaScript -->
+            </div>
+        </div>
+
+        <div id="review-container" class="review-container">
+            <!-- سيتم ملؤه بواسطة JavaScript -->
+        </div>
+    </div>
+
+    <script>
+        const definitions = {
+    "1-1": { // الوحدة الأولى - الدرس الأول: الغازات
+        "نظرية الحركة الجزيئية": "النظرية التي تصف سلوك المادة بالاعتماد على حركة جسيماتها",
+        "التصادم المرن": "تصادمات لا تفقد من خلالها الطاقة الحركية بل تنتقل من جسيم لآخر ولكن يبقى متوسط الطاقة الحركية ثابتا",
+        "درجة الحرارة": "معدل الطاقة الحركية لجزيئات المادة",
+        "الانتشار": "انتقال مادة من خلال أخرى من منطقة ذات تركيز مرتفع إلى منطقة ذات تركيز منخفض",
+        "التدفق": "عندما يخرج الغاز من ثقب صغير",
+        "قانون جراهام": "ينص على أن معدل سرعة انتشار جزيئات الغاز يتناسب عكسيًا مع الجذر التربيعي لكتلة الغاز المولية",
+        "الضغط": "القوة الواقعة على وحدة المساحة",
+        "الضغط الجوي": "هو الضغط الناتج عن حركة جسيمات الهواء في جميع الاتجاهات",
+        "الباروميتر": "جهاز لقياس الضغط الجوي",
+        "المانوميتر": "أداة تستخدم لقياس ضغط الغاز المحصور",
+        "الباسكال": "وحدة دولية تستخدم لقياس الضغط",
+        "قانون دالتون للضغوط الجزيئية": "الضغط الكلي لخليط من الغاز يساوي مجموع الضغوط الجزيئية للغازات التي في الخليط"
+    },
+    "1-2": { // الوحدة الأولى - الدرس الثاني: قوى التجاذب
+        "قوى التشتت": "هي قوى التجاذب بين الجزيئات غير القطبية",
+        "الثنائية القطبية": "قوى تجاذب بين المناطق مختلفة الشحنة في الجزيئات القطبية",
+        "الرابطة الهيدروجينية": "هي رابطة تنشأ عندما تكون ذرة الهيدروجين محصورة بين ذرتين أكبر منه في السالبية الكهربية"
+    },
+    "1-3": { // الوحدة الأولى - الدرس الثالث: المواد السائلة والمواد الصلبة
+        "الميوعة": "قابلية المادة للانسياب أو الانتشار",
+        "اللزوجة": "مقاومة السائل للتدفق والانسياب",
+        "التوتر السطحي": "الطاقة اللازمة لزيادة مساحة سطح السائل بمقدار معين",
+        "العوامل الخافضة للتوتر السطحي": "المركبات التي تعمل على خفض التوتر السطحي",
+        "قوى التماسك": "قوة الترابط بين الجسيمات المتماثلة",
+        "قوى التلاصق": "قوة الترابط بين الجسيمات المختلفة",
+        "المادة الصلبة البلورية": "مادة ذراتها أو أيوناتها أو جزيئاتها مرتبة في شكل هندسي منتظم",
+        "وحدة البناء": "هي أصغر ترتيب للذرات في الشبكة البلورية يجعل التماثل نفسه في البلورة ككل"
+    },
+    "1-4": { // الوحدة الأولى - الدرس الرابع: تغيرات الحالة الفيزيائية
+        "الانصهار": "عملية تحول المادة الصلبة إلى سائلة بعد امتصاصها قدرًا من الطاقة الحرارية",
+        "درجة الانصهار": "درجة الحرارة التي تتحول عندها المادة الصلبة إلى سائلة",
+        "التبخر": "عملية تحول المادة السائلة إلى بخار بعد امتصاصها قدرًا من الطاقة الحرارية",
+        "الضغط البخار": "الضغط الناتج عن جسيمات الهواء التي تتحرك في جميع الاتجاهات",
+        "درجة الغليان": "درجة الحرارة التي يتساوى عندها ضغط بخار السائل مع الضغط الجوي الخارجي",
+        "التسامي": "تحول المادة مباشرة من المادة الصلبة إلى غازية دون المرور بالسائلة بعد امتصاص قدرًا من الطاقة",
+        "التجمد": "هو تحول المادة السائلة إلى صلبة بعد فقدها قدرًا من الطاقة",
+        "درجة التجمد": "درجة الحرارة التي يتحول عندها السائل إلى صلب متبلور",
+        "التكثف": "هو تحول المادة الغازية إلى سائلة بعد فقدها قدرًا من الطاقة",
+        "الترسب": "تكون مادة صلبة في أثناء تفاعل كيميائي / تحول المادة الغازية إلى مادة صلبة دون المرور بالحالة السائلة بعد فقدهًا قدرًا من الطاقة",
+        "مخطط الحالة الفيزيائية": "رسم بياني للضغط مقابل درجة الحرارة يوضح حالة المادة تحت ظروف مختلفة من درجة الحرارة والضغط",
+        "النقطة الثلاثية": "نقطة على الرسم البياني تمثل درجة الحرارة والضغط التي توجد عندها المادة في الحالات الثلاثة معًا وفي الوقت نفسه",
+        "النقطة الحرجة": "النقطة تمثل كلًا من الضغط ودرجة الحرارة التي لا يمكن للماء بعدها أن يكون في الحالة السائلة"
+    },
+    "2-1": { // الوحدة الثانية - الدرس الأول: الطاقة
+        "الطاقة": "القدرة على بذل شغل أو إنتاج حرارة",
+        "قانون حفظ الطاقة": "ينص على أن الطاقة لا تفنى ولا تستحدث وإنما تتحول من شكل إلى آخر",
+        "طاقة الوضع": "الطاقة التي تعتمد على تركيب أو موضع جسم ما",
+        "طاقة الحركة": "الطاقة التي تنجم عن حركة الأجسام",
+        "طاقة الوضع الكيميائية": "الطاقة المخزنة في الروابط الكيميائية للمادة",
+        "الحرارة": "طاقة تنتقل من الجسم الساخن إلى الجسم الأبرد",
+        "السعر": "كمية الحرارة اللازمة لرفع درجة حرارة 1g من الماء النقي درجة سيليزية واحدة",
+        "الحرارة النوعية": "كمية الحرارة اللازمة لرفع درجة حرارة جرام واحد من مادة درجة سيليزية واحدة"
+    },
+    "2-2": { // الوحدة الثانية - الدرس الثاني: الحرارة
+        "المسعر": "جهاز معزول حراريا يستخدم لقياس كمية الحرارة الممتصة أو المنطلقة في أثناء عملية كيميائية أو فيزيائية"
+    },
+    "2-3": { // الوحدة الثانية - الدرس الثالث: المعادلات الكيميائية الحرارية
+        "الكيمياء الحرارية": "فرع من فروع الكيمياء يدرس تغيرات الحرارة التي ترافق التفاعلات الكيميائية وتغيرات الحالة الفيزيائية",
+        "المحتوى الحراري": "مقدار الطاقة الحرارية المخزنة في مول واحد من المادة تحت ضغط ثابت",
+        "التغير في المحتوى الحراري": "التغير في المحتوى الحراري وهو كمية الحرارة الممتصة أو المنطلقة في التفاعل الكيميائي",
+        "المعادلة الكيميائية الحرارية": "معادلة كيميائية موزونة تشتمل على الحالات الفيزيائية لجميع المواد المتفاعلة، والنواتج، والتغير في الطاقة",
+        "حرارة الاحتراق": "المحتوى الحراري الناتج عن حرق 1mol من المادة احتراقا كاملا",
+        "حرارة التبخر المولارية": "الحرارة اللازمة لتبخر 1mol من السائل",
+        "حرارة الانصهار المولارية": "الحرارة اللازمة لصهر 1mol من مادة صلبة",
+        "حرارة التكثف المولارية": "الحرارة الناتجة من تكثف 1mol من المادة الغازية",
+        "حرارة التجمد المولارية": "الحرارة الناتجة من تجمد 1mol من المادة السائلة"
+    },
+    "2-4": { // الوحدة الثانية - الدرس الرابع: حساب التغير في المحتوى الحراري
+        "قانون هس": "ينص على أن حرارة التفاعل أو التغير في المحتوى الحراري تتوقف على طبيعة المواد الداخلة في التفاعل والمواد الناتجة منه، وليس على الخطوات أو المسار الذي يتم فيه التفاعل",
+        "حرارة التكوين القياسية": "التغير في المحتوى الحراري الذي يرافق تكوين مول واحد من المركب في الظروف القياسية من عناصره في حالتها القياسية"
+    }
+};
+
+        let currentQuizDefinitions = [];
+        let currentIndex = 0;
+        let scores = [];
+        let mode = 'quiz';
+
+        function getLessonName(term) {
+            for (const [lessonKey, lessonDefs] of Object.entries(definitions)) {
+                if (Object.keys(lessonDefs).includes(term)) {
+                    const unit = lessonKey.split('-')[0];
+                    const lesson = lessonKey.split('-')[1];
+                    return `الوحدة ${unit} - الدرس ${lesson}`;
+                }
+            }
+            return '';
+        }
+
+        function showQuiz() {
+            mode = 'quiz';
+            document.getElementById('quiz-container').style.display = 'block';
+            document.getElementById('review-container').style.display = 'none';
+            document.querySelector('.nav-btn:nth-child(1)').classList.add('active');
+            document.querySelector('.nav-btn:nth-child(2)').classList.remove('active');
+            startQuiz();
+        }
+
+        function showReview() {
+            mode = 'review';
+            document.getElementById('quiz-container').style.display = 'none';
+            document.getElementById('review-container').style.display = 'block';
+            document.querySelector('.nav-btn:nth-child(1)').classList.remove('active');
+            document.querySelector('.nav-btn:nth-child(2)').classList.add('active');
+            
+            let reviewHtml = '';
+            for (const [lessonKey, lessonDefs] of Object.entries(definitions)) {
+                const unit = lessonKey.split('-')[0];
+                const lesson = lessonKey.split('-')[1];
+                
+                reviewHtml += `<h2 class="mb-4">الوحدة ${unit} - الدرس ${lesson}</h2>`;
+                
+                for (const [term, definition] of Object.entries(lessonDefs)) {
+                    reviewHtml += `
+                        <div class="review-item">
+                            <strong>${term}</strong>
+                            <p>${definition}</p>
+                        </div>
+                    `;
+                }
+            }
+            
+            document.getElementById('review-container').innerHTML = reviewHtml;
+        }
+
+        function startQuiz() {
+            const allDefinitions = [];
+            for (const lesson in definitions) {
+                for (const term in definitions[lesson]) {
+                    allDefinitions.push({ term, definition: definitions[lesson][term] });
+                }
+            }
+            
+            currentQuizDefinitions = shuffleArray(allDefinitions).slice(0, 8);
+            currentIndex = 0;
+            scores = [];
+            updateUI();
+        }
+
+        function updateUI() {
+            const progress = ((currentIndex + 1) / 8) * 100;
+            document.getElementById('progress').style.width = `${progress}%`;
+            document.getElementById('question-count').textContent = `${currentIndex + 1}/8`;
+
+            const quizContent = document.getElementById('quiz-content');
+            const currentQuestion = currentQuizDefinitions[currentIndex];
+            const lessonName = getLessonName(currentQuestion.term);
+
+            quizContent.innerHTML = `
+                <div class="definition-box animate__animated animate__fadeIn">
+                    <div class="question-number">السؤال ${currentIndex + 1} من 8</div>
+                    <p class="definition-text">${currentQuestion.definition}</p>
+                    <div class="lesson-info">${lessonName}</div>
+                    <input type="text" class="answer-input" 
+                           placeholder="اكتب المصطلح هنا" 
+                           id="current-answer" 
+                           data-correct="${currentQuestion.term}"
+                           autocomplete="off">
+                    <div id="feedback-message"></div>
+                </div>
+                <button class="btn" onclick="checkCurrentAnswer()" id="next-button">
+                    تحقق من الإجابة
+                </button>
+            `;
+
+            document.getElementById('current-answer').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    checkCurrentAnswer();
+                }
+            });
+            
+            document.getElementById('current-answer').focus();
+        }
+
+        function showFeedback(isCorrect, correctAnswer) {
+        const feedbackDiv = document.getElementById('feedback-message');
+        const nextButton = document.getElementById('next-button');
+        const input = document.getElementById('current-answer');
+        
+        feedbackDiv.className = `feedback-message ${isCorrect ? 'correct' : 'incorrect'} animate__animated animate__fadeIn`;
+        feedbackDiv.innerHTML = isCorrect 
+            ? `<div>✓ إجابة صحيحة!</div>`
+            : `<div>✗ إجابة غير صحيحة</div><div>الإجابة الصحيحة هي: ${correctAnswer}</div>`;
+        
+        input.disabled = true;
+        nextButton.textContent = currentIndex < 7 ? 'السؤال التالي' : 'إنهاء الاختبار';
+        nextButton.onclick = () => moveToNext(isCorrect);
+    }
+
+    function moveToNext(wasCorrect) {
+        scores.push(wasCorrect ? 100 : 0);
+        
+        if (currentIndex < 7) {
+            currentIndex++;
+            updateUI();
+        } else {
+            showFinalResults();
+        }
+    }
+
+    function checkCurrentAnswer() {
+        const input = document.getElementById('current-answer');
+        const correctAnswer = input.dataset.correct;
+        const userAnswer = input.value.trim();
+        
+        // حساب التشابه بين الإجابة الصحيحة وإجابة المستخدم
+        const similarity = calculateSimilarity(userAnswer, correctAnswer);
+        const isCorrect = similarity > 0.8; // اعتبار الإجابة صحيحة إذا كان التشابه أكثر من 80%
+        
+        showFeedback(isCorrect, correctAnswer);
+    }
+
+    function showFinalResults() {
+        const averageScore = scores.reduce((a, b) => a + b, 0) / scores.length;
+        
+        let message;
+        if (averageScore >= 90) {
+            message = 'ممتاز! أداء رائع';
+        } else if (averageScore >= 75) {
+            message = 'جيد جداً! استمر في التحسن';
+        } else if (averageScore >= 60) {
+            message = 'جيد! يمكنك تحسين نتيجتك بمزيد من المراجعة';
+        } else {
+            message = 'تحتاج إلى مزيد من المراجعة. لا تيأس!';
+        }
+
+        Swal.fire({
+            title: 'انتهى الاختبار!',
+            html: `
+                <div style="direction: rtl" class="animate__animated animate__fadeIn">
+                    <p style="font-size: 1.2rem; margin-bottom: 1rem">النتيجة النهائية: ${averageScore.toFixed(1)}%</p>
+                    <p style="color: #a1a1aa; margin-bottom: 1rem">${message}</p>
+                    <p style="color: #a1a1aa">هل تريد المحاولة مرة أخرى؟</p>
+                </div>
+            `,
+            icon: averageScore >= 60 ? 'success' : 'warning',
+            confirmButtonText: 'محاولة جديدة',
+            confirmButtonColor: '#3b82f6',
+            showCancelButton: true,
+            cancelButtonText: 'مراجعة التعاريف',
+            background: '#2c2e33',
+            color: '#e4e4e7'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                startQuiz();
+            } else {
+                showReview();
+            }
+        });
+    }
+
+    function calculateSimilarity(str1, str2) {
+        if (!str1 || !str2) return 0;
+        
+        // تنظيف النصوص وتحويلها إلى أحرف صغيرة
+        const s1 = str1.trim().toLowerCase().replace(/\s+/g, ' ');
+        const s2 = str2.trim().toLowerCase().replace(/\s+/g, ' ');
+        
+        if (s1 === s2) return 1;
+
+        let matches = 0;
+        const maxLength = Math.max(s1.length, s2.length);
+        
+        // حساب التشابه بين الأحرف
+        for (let i = 0; i < Math.min(s1.length, s2.length); i++) {
+            if (s1[i] === s2[i]) matches++;
+        }
+        
+        return matches / maxLength;
+    }
+
+    function shuffleArray(array) {
+        const newArray = [...array];
+        for (let i = newArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [newArray[i], newArray[j]] = [newArray[j], newArray[i]];
+        }
+        return newArray;
+    }
+
+    // بدء الاختبار عند تحميل الصفحة
+    document.addEventListener('DOMContentLoaded', () => {
+        startQuiz();
+        // إضافة تأثيرات حركية للعناصر عند التحميل
+        document.querySelectorAll('.animate__animated').forEach(element => {
+            element.style.opacity = '0';
+            setTimeout(() => {
+                element.style.opacity = '1';
+                element.classList.add('animate__fadeIn');
+            }, 100);
+        });
+    });
+</script>
+</body>
+</html>
